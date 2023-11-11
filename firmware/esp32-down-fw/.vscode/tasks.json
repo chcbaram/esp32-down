@@ -1,0 +1,40 @@
+{
+  // See https://go.microsoft.com/fwlink/?LinkId=733558
+  // for the documentation about the tasks.json format
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "build",
+      "type": "shell",
+      "command": "cmake --build build -j16",
+      "problemMatcher": [],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }
+    },
+    {
+      "label": "clean",
+      "type": "shell",
+      "command": "cmake --build build --target clean",
+      "problemMatcher": [],
+    },      
+    {
+      "label": "configure",
+      "type": "shell",
+      "command": "cmake -S . -B build -DPICO_BOARD=pico -DPICO_SDK_PATH=~/dev/pico/pico-sdk",
+      "problemMatcher": []
+    },  
+    {
+      "label": "configure for win",
+      "type": "shell",
+      "command": "cmake -S . -B build -G 'MinGW Makefiles' -DPICO_BOARD=pico",
+      "problemMatcher": []
+    },      
+    {
+      "label": "uf2_down",
+      "type": "shell",
+      "command": "python3 tools/down.py",
+    }
+  ]
+}
