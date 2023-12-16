@@ -14,7 +14,9 @@
 #include "cli.h"
 #include "log.h"
 #include "gpio.h"
-
+#include "i2c.h"
+#include "spi.h"
+#include "lcd.h"
 
 bool hwInit(void);
 

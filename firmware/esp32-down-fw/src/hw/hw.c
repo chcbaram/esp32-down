@@ -6,7 +6,7 @@
  */
 
 #include "hw.h"
-
+#include "lcd/st7789.h"
 
 
 
@@ -35,8 +35,11 @@ bool hwInit(void)
   
   ledInit();
   gpioInit();
+  i2cInit();
+  spiInit();
+  lcdInit();
 
   logBoot(false);
-
+  
   return true;
 }

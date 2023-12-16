@@ -1,13 +1,13 @@
 file(GLOB SRC_FILES 
   bsp/*.c
   hw/*.c
-  hw/driver/*.c
 )
 
 file(GLOB_RECURSE SRC_FILES_RECURSE
   ap/*.cpp
   ap/*.c
   common/*.c 
+  hw/*.c
 )
 
 add_executable(
@@ -33,6 +33,8 @@ target_link_libraries(${PRJ_NAME}
   hardware_spi
   hardware_dma
   hardware_irq
+  hardware_i2c
+  pico_multicore
   )
 
 pico_add_extra_outputs(${PRJ_NAME})

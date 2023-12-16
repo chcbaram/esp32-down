@@ -16,8 +16,14 @@ typedef struct
 
 const gpio_tbl_t gpio_tbl[GPIO_MAX_CH] =
     {
-      {6, _DEF_OUTPUT, _DEF_HIGH, _DEF_LOW,  _DEF_HIGH}, // 0. ESP32_RESET
-      {7, _DEF_OUTPUT, _DEF_HIGH, _DEF_LOW,  _DEF_HIGH}, // 1. ESP32_BOOT
+      {6 , _DEF_OUTPUT, _DEF_HIGH, _DEF_LOW, _DEF_HIGH}, // 0. ESP32_RESET
+      {7 , _DEF_OUTPUT, _DEF_HIGH, _DEF_LOW, _DEF_HIGH}, // 1. ESP32_BOOT
+      {26, _DEF_OUTPUT, _DEF_HIGH, _DEF_LOW, _DEF_HIGH}, // 2. LCD_DC
+      {28, _DEF_OUTPUT, _DEF_HIGH, _DEF_LOW, _DEF_HIGH}, // 3. LCD_RST
+      {27, _DEF_OUTPUT, _DEF_HIGH, _DEF_LOW, _DEF_LOW }, // 4. LCD_BL
+      {5 , _DEF_OUTPUT, _DEF_HIGH, _DEF_LOW, _DEF_HIGH}, // 5. LCD_CS
+      {14, _DEF_OUTPUT, _DEF_HIGH, _DEF_LOW, _DEF_HIGH}, // 6. LCD_TP_RST
+      {15, _DEF_INPUT , _DEF_HIGH, _DEF_LOW, _DEF_HIGH}, // 7. LCD_TP_INT
     };
 
 

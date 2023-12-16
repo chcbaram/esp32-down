@@ -22,6 +22,7 @@
 #include "pico/stdio/driver.h"
 #include "hardware/uart.h"
 #include "hardware/gpio.h"
+#include "pico/multicore.h"
 
 
 bool bspInit(void);
