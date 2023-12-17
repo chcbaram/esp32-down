@@ -67,14 +67,41 @@ typedef enum
 
 
 #ifdef HW_LCD_LVGL
+
+
 typedef struct
 {
   const lvgl_img_t *p_img;
+  uint16_t color_tbl[256];
   int16_t x;
   int16_t y;
   int16_t w;
   int16_t h;
 } image_t;
+
+typedef struct
+{
+  const lvgl_img_t *p_img;
+  int16_t  x;
+  int16_t  y;
+  int16_t  w;
+  int16_t  h;
+  int16_t  stride_x;
+  int16_t  stride_y;
+  int16_t  cnt;
+  uint32_t delay_ms;
+} sprite_param_t;
+
+typedef struct
+{
+  image_t image;
+  sprite_param_t param;
+
+  uint32_t pre_time;
+  int16_t  cur_index;
+  bool     is_init;
+} sprite_t;
+
 #endif
 
 
@@ -134,6 +161,12 @@ uint32_t lcdGetStrWidth(const char *fmt, ...);
 #ifdef HW_LCD_LVGL
 image_t lcdCreateImage(lvgl_img_t *p_lvgl_img, int16_t x, int16_t y, int16_t w, int16_t h);
 void lcdDrawImage(image_t *p_img, int16_t x, int16_t y);
+void lcdDrawImageOffset(image_t *p_img, int16_t offset_x, int16_t offset_y, int16_t draw_x, int16_t draw_y);
+
+bool lcdSpriteCreate(sprite_t *p_sprite);
+void lcdSpriteDraw(sprite_t *p_sprite, int16_t x, int16_t y, uint16_t index);
+void lcdSpriteDrawWrap(sprite_t *p_sprite, int16_t x, int16_t y, bool reset);
+
 void lcdLogoOn(void);
 void lcdLogoOff(void);
 bool lcdLogoIsOn(void);

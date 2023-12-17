@@ -76,6 +76,7 @@ enum {
     LV_IMG_CF_USER_ENCODED_7,          /**< User holder encoding format. */
 };
 
+#if 0
 typedef struct {
 
     uint32_t cf : 5;          /* Color format: See `lv_img_color_format_t`*/
@@ -87,6 +88,18 @@ typedef struct {
     uint32_t w : 11; /*Width of the image map*/
     uint32_t h : 11; /*Height of the image map*/
 } lv_img_header_t;
+#else
+typedef struct {
+
+    uint8_t cf;          /* Color format: See `lv_img_color_format_t`*/
+    uint8_t always_zero; /*It the upper bits of the first byte. Always zero to look like a
+                                 non-printable character*/
+    uint8_t reserved; /*Reserved to be used later*/
+
+    uint16_t w; /*Width of the image map*/
+    uint16_t h; /*Height of the image map*/
+} lv_img_header_t;
+#endif
 
 /** Image header it is compatible with
  * the result from image converter utility*/
