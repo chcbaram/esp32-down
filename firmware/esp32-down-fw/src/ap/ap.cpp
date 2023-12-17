@@ -8,9 +8,10 @@ static void apCore1(void);
 
 LVGL_IMG_DEF(run_img_v);
 
-
-image_t img_santa;
 sprite_t santa_sprite;
+
+
+
 
 void apInit(void)
 {
@@ -19,12 +20,6 @@ void apInit(void)
   esp32Init();
 
   multicore_launch_core1(apCore1);  
-
-  logPrintf("cnt : %d, %d\n", run_img_v.header.h, run_img_v.header.w);
-
-  img_santa = lcdCreateImage(&run_img_v, 0, 0, 240, 240);
-
-  // img_santa = lcdCreateSpriteImage(&run_img_v, 0, 0, 240, 240, 11, );
 
   santa_sprite.param.p_img = &run_img_v;
   santa_sprite.param.x = 0;
@@ -36,8 +31,6 @@ void apInit(void)
   santa_sprite.param.cnt = run_img_v.header.h/256;
   santa_sprite.param.delay_ms = 60;
   lcdSpriteCreate(&santa_sprite);
-
-  logPrintf("cnt : %d, %d\n", run_img_v.header.h, santa_sprite.param.cnt);
 }
 
 void apMain(void)
