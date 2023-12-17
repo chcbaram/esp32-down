@@ -26,6 +26,7 @@ target_include_directories(${PRJ_NAME} PUBLIC
   common/core
   common/hw/include 
   hw
+  lib
 )
 
 target_link_libraries(${PRJ_NAME} 

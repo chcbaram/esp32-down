@@ -42,8 +42,10 @@
 #define _USE_HW_SPI
 #define      HW_SPI_MAX_CH          1
 
-#define _USE_HW_LCD
 #define _USE_HW_ST7789
+
+#define _USE_HW_LCD
+#define      HW_LCD_LVGL            1
 #define      HW_LCD_WIDTH           240
 #define      HW_LCD_HEIGHT          280
 

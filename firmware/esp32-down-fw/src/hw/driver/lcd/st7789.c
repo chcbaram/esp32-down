@@ -278,7 +278,7 @@ bool st7789SendBuffer(uint8_t *p_data, uint32_t length, uint32_t timeout_ms)
   gpioPinWrite(_PIN_DEF_DC, _DEF_HIGH);
   gpioPinWrite(_PIN_DEF_CS, _DEF_LOW);
 
-  spiDmaTxTransfer(_DEF_SPI1, (void *)p_data, length, 0);
+  spiDmaTxTransfer(spi_ch, (void *)p_data, length, 0);
   return true;
 }
 
