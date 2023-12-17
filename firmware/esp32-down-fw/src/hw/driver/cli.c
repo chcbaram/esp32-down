@@ -1,9 +1,11 @@
 /*
  * cli.c
  *
- *  Created on: 2021. 6. 21.
+ *  Created on: Nov 12, 2021
  *      Author: baram
  */
+
+
 
 
 #include "cli.h"
@@ -62,6 +64,7 @@ typedef struct
   uint32_t baud;
   bool     is_open;
   bool     is_log;
+  bool     is_busy;
   uint8_t  log_ch;
   uint32_t log_baud;
   uint8_t  state;
@@ -112,6 +115,7 @@ bool cliInit(void)
 {
   cli_node.is_open = false;
   cli_node.is_log  = false;
+  cli_node.is_busy = false;
   cli_node.state   = CLI_RX_IDLE;
 
   cli_node.hist_line_i     = 0;
@@ -138,12 +142,7 @@ bool cliOpen(uint8_t ch, uint32_t baud)
   cli_node.ch = ch;
 
 
-  if (uartIsOpen(ch) && uartGetBaud(ch) == baud)
-  {
-      cli_node.baud = baud;
-      cli_node.is_open = true;
-  }
-  else if (cli_node.is_open == false || cli_node.baud != baud)
+  if (cli_node.is_open == false || cli_node.baud != baud)
   {
     if (baud > 0)
     {
@@ -155,9 +154,9 @@ bool cliOpen(uint8_t ch, uint32_t baud)
   return cli_node.is_open;
 }
 
-uint8_t cliGetPort(void)
+bool cliIsBusy(void)
 {
-  return cli_node.ch;
+  return cli_node.is_busy;
 }
 
 bool cliOpenLog(uint8_t ch, uint32_t baud)
@@ -174,6 +173,11 @@ bool cliOpenLog(uint8_t ch, uint32_t baud)
     cli_node.is_log = true;
   }
   return ret;
+}
+
+uint8_t cliGetPort(void)
+{
+  return cli_node.ch;
 }
 
 bool cliLogClose(void)
@@ -526,6 +530,7 @@ bool cliRunCmd(cli_t *p_cli)
 
     cliToUpper(p_cli->argv[0]);
 
+    p_cli->is_busy = true;
     for (int i=0; i<p_cli->cmd_count; i++)
     {
       if (strcmp(p_cli->argv[0], p_cli->cmd_list[i].cmd_str) == 0)
@@ -536,6 +541,7 @@ bool cliRunCmd(cli_t *p_cli)
         break;
       }
     }
+    p_cli->is_busy = false;
   }
 
   return ret;
@@ -573,6 +579,21 @@ bool cliParseArgs(cli_t *p_cli)
   return ret;
 }
 
+bool cliRunStr(const char *fmt, ...)
+{
+  bool ret;
+  va_list arg;
+  va_start (arg, fmt);  
+  cli_t *p_cli = &cli_node;
+
+  vsnprintf((char *)p_cli->line.buf, CLI_LINE_BUF_MAX, fmt, arg);
+  va_end (arg);
+  
+  ret = cliRunCmd(p_cli);
+  
+  return ret;
+}
+
 void cliPrintf(const char *fmt, ...)
 {
   va_list arg;
@@ -585,6 +606,13 @@ void cliPrintf(const char *fmt, ...)
   va_end (arg);
 
   uartWrite(p_cli->ch, (uint8_t *)p_cli->print_buffer, len);
+}
+
+void cliPutch(uint8_t data)
+{
+  cli_t *p_cli = &cli_node;
+  
+  uartWrite(p_cli->ch, &data, 1);
 }
 
 void cliToUpper(char *str)
@@ -790,6 +818,7 @@ void cliMemoryDump(cli_args_t *args)
         ascptr+=1;
       }
       cliPrintf("|\n   ");
+      delay(1);
     }
     addr++;
   }

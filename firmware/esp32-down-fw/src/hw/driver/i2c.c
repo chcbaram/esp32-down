@@ -143,6 +143,9 @@ bool i2cIsDeviceReady(uint8_t ch, uint8_t dev_addr)
 {
   uint8_t rx_data;
   int i2c_ret;
+  
+  if (is_begin[ch] == false)
+    return false;
 
   i2c_ret = i2c_read_blocking(i2c_tbl[ch].h_i2c, dev_addr, &rx_data, 1, false);
   if (i2c_ret > 0)
@@ -172,52 +175,42 @@ bool i2cReadByte (uint8_t ch, uint16_t dev_addr, uint16_t reg_addr, uint8_t *p_d
 bool i2cReadBytes(uint8_t ch, uint16_t dev_addr, uint16_t reg_addr, uint8_t *p_data, uint32_t length, uint32_t timeout)
 {
   bool ret = false;
-  #if 0
-  HAL_StatusTypeDef i2c_ret;
-  I2C_HandleTypeDef *p_handle = i2c_tbl[ch].p_hi2c;
+  int i2c_ret;
+
 
   if (ch >= I2C_MAX_CH)
   {
     return false;
   }
 
-  i2c_ret = HAL_I2C_Mem_Read(p_handle, (uint16_t)(dev_addr << 1), reg_addr, I2C_MEMADD_SIZE_8BIT, p_data, length, timeout);
-
-  if( i2c_ret == HAL_OK )
+  i2c_ret = i2c_write_timeout_us(i2c_tbl[ch].h_i2c, dev_addr, (uint8_t *)&reg_addr, 1, true, timeout*1000); 
+  if (i2c_ret)
   {
-    ret = true;
+    i2c_ret = i2c_read_timeout_us(i2c_tbl[ch].h_i2c, dev_addr, p_data, length, false, timeout*1000);
+    if (i2c_ret == length)
+    {
+      ret = true;
+    }
   }
-  else
-  {
-    ret = false;
-  }
-  #endif 
   return ret;
 }
 
 bool i2cReadData(uint8_t ch, uint16_t dev_addr, uint8_t *p_data, uint32_t length, uint32_t timeout)
 {
   bool ret = false;
-  #if 0
-  HAL_StatusTypeDef i2c_ret;
-  I2C_HandleTypeDef *p_handle = i2c_tbl[ch].p_hi2c;
+  int i2c_ret;
+
 
   if (ch >= I2C_MAX_CH)
   {
     return false;
   }
 
-  i2c_ret = HAL_I2C_Master_Receive(p_handle, (uint16_t)(dev_addr << 1), p_data, length, timeout);
-
-  if( i2c_ret == HAL_OK )
+  i2c_ret = i2c_read_timeout_us(i2c_tbl[ch].h_i2c, dev_addr, p_data, length, false, timeout*1000);
+  if (i2c_ret == length)
   {
     ret = true;
   }
-  else
-  {
-    ret = false;
-  }
-  #endif
   return ret;
 }
 
@@ -250,9 +243,8 @@ bool i2cWriteBytes(uint8_t ch, uint16_t dev_addr, uint16_t reg_addr, uint8_t *p_
 bool i2cWriteData(uint8_t ch, uint16_t dev_addr, uint8_t *p_data, uint32_t length, uint32_t timeout)
 {
   bool ret = false;
-  #if 0
-  HAL_StatusTypeDef i2c_ret;
-  I2C_HandleTypeDef *p_handle = i2c_tbl[ch].p_hi2c;
+  int i2c_ret;
+
 
   if (ch >= I2C_MAX_CH)
   {
@@ -260,17 +252,12 @@ bool i2cWriteData(uint8_t ch, uint16_t dev_addr, uint8_t *p_data, uint32_t lengt
   }
 
 
-  i2c_ret = HAL_I2C_Master_Transmit(p_handle, (uint16_t)(dev_addr << 1), p_data, length, timeout);
-
-  if(i2c_ret == HAL_OK)
+  i2c_ret = i2c_write_timeout_us(i2c_tbl[ch].h_i2c, dev_addr, p_data, length, false, timeout*1000); 
+  if (i2c_ret == length)
   {
     ret = true;
   }
-  else
-  {
-    ret = false;
-  }
-  #endif
+
   return ret;
 }
 
@@ -341,7 +328,7 @@ void cliI2C(cli_args_t *args)
     }
     else if(args->isStr(0, "begin") == true)
     {
-      i2c_ret = i2cBegin(print_ch, 100);
+      i2c_ret = i2cBegin(print_ch, 400);
       if (i2c_ret == true)
       {
         cliPrintf("I2C CH%d Begin OK\n", print_ch + 1);

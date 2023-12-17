@@ -28,6 +28,10 @@
 #define      HW_CLI_LINE_HIS_MAX    4
 #define      HW_CLI_LINE_BUF_MAX    64
 
+#define _USE_HW_CLI_GUI
+#define      HW_CLI_GUI_WIDTH       80
+#define      HW_CLI_GUI_HEIGHT      24
+
 #define _USE_HW_LOG
 #define      HW_LOG_CH              HW_UART_CH_DEBUG
 #define      HW_LOG_BOOT_BUF_MAX    1024
@@ -49,12 +53,19 @@
 #define      HW_LCD_WIDTH           240
 #define      HW_LCD_HEIGHT          280
 
+#define _USE_HW_CST816T
+
+#define _USE_HW_TOUCH
+#define      HW_TOUCH_MAX_CH        1
 
 
 #define _PIN_GPIO_LCD_BL            4
 #define _PIN_GPIO_LCD_DC            2
 #define _PIN_GPIO_LCD_CS            5
 #define _PIN_GPIO_LCD_RST           3
+#define _PIN_GPIO_LCD_TP_INT        7
+#define _PIN_GPIO_LCD_TP_RST        6
+
 
 
 #endif /* SRC_HW_HW_DEF_H_ */

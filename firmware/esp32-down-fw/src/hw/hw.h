@@ -17,6 +17,8 @@
 #include "i2c.h"
 #include "spi.h"
 #include "lcd.h"
+#include "touch.h"
+
 
 bool hwInit(void);
 

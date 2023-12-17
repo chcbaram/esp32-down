@@ -37,6 +37,9 @@ void apMain(void)
 {
   uint32_t pre_time;
   int16_t pos_x = -200;
+  int16_t pos_y = 50;
+  touch_info_t info;
+
 
   while(1)
   {
@@ -51,11 +54,23 @@ void apMain(void)
     {
       lcdClearBuffer(black);
 
-      lcdSpriteDrawWrap(&santa_sprite, pos_x, 50, false);
-      pos_x = pos_x + 10;
-      if (pos_x >= lcdGetWidth())
+      
+      touchGetInfo(&info);
+      if (info.count > 0)
       {
-        pos_x = -200;
+        pos_x = info.point[0].x - santa_sprite.param.w/2;
+        pos_y = info.point[0].y - santa_sprite.param.h/2;
+      }
+
+      lcdSpriteDrawWrap(&santa_sprite, pos_x, pos_y, false);
+
+      if (info.count == 0)
+      {
+        pos_x = pos_x + 10;
+        if (pos_x >= lcdGetWidth())
+        {
+          pos_x = -200;
+        }
       }
 
       if (pos_x >= -100 && pos_x < 50)

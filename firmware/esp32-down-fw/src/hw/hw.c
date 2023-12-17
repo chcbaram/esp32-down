@@ -6,7 +6,7 @@
  */
 
 #include "hw.h"
-#include "lcd/st7789.h"
+#include "touch/cst816t.h"
 
 
 
@@ -38,8 +38,10 @@ bool hwInit(void)
   i2cInit();
   spiInit();
   lcdInit();
+  touchInit();
 
   logBoot(false);
-  
+
+
   return true;
 }
